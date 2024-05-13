@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="facebook_app_id">1652836195527831</string>
+    <string name="fb_login_protocol_scheme">fb1652836195527831</string>
+    <string name="facebook_client_token">096e31acabd4914c3019133d9ebddb88</string>
+    <string name="app_name">"swaysafeguardapp"</string>
+
+</resources>
+
+
