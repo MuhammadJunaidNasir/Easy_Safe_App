@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "335848046561",
+    "project_id": "swaysafeguard",
+    "storage_bucket": "swaysafeguard.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335848046561:android:327aa135a414c5b2b69ca0",
+        "android_client_info": {
+          "package_name": "com.example.swaysafeguardapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335848046561-6ph4tndiskd6ve4isvu5a7r25lsgk4o1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.swaysafeguardapp",
+            "certificate_hash": "a5fbccd41119a6b00e12f8ede19d70eb3b9410d8"
+          }
+        },
+        {
+          "client_id": "335848046561-68e2300vf6a30q1ntm7b8og281l6c8mk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUdstnohayeWuWvoTvEHMCRwbL0G2alZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "335848046561-68e2300vf6a30q1ntm7b8og281l6c8mk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
