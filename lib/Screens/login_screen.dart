@@ -119,6 +119,7 @@ class _LogInScreenState extends State<LogInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _height= MediaQuery.of(context).size.height;
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -127,16 +128,16 @@ class _LogInScreenState extends State<LogInScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-            
+
                 const SizedBox(height: 150,),
-            
+
                 const Padding(
                   padding: EdgeInsets.only(left: 20.0),
                   child: Text('Log in',style: TextStyle(color: Colors.deepPurpleAccent, fontWeight: FontWeight.bold, fontSize: 28),),
                 ),
-            
+
                 const SizedBox(height: 25,),
-            
+
                 const Padding(
                   padding: EdgeInsets.only(left: 20.0),
                   child: Text('Email',style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 15),),
@@ -185,11 +186,11 @@ class _LogInScreenState extends State<LogInScreen> {
                     },
                   ),
                 ),
-            
-            
+
+
                 const SizedBox(height: 20,),
-            
-            
+
+
                 const Padding(
                   padding: EdgeInsets.only(left: 20.0),
                   child: Text('Password',style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 15),),
@@ -207,9 +208,9 @@ class _LogInScreenState extends State<LogInScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       suffixIcon: _hidePassword==true? InkWell(child: Icon(Icons.visibility),onTap: (){_hidePassword=false;setState(() {
-            
+
                       });},) :InkWell(child: const Icon(Icons.visibility_off),onTap: (){_hidePassword=true;setState(() {
-            
+
                       });},),
                     ),
                     validator: (value){
@@ -230,21 +231,21 @@ class _LogInScreenState extends State<LogInScreen> {
                     },
                   ),
                 ),
-            
+
                 const SizedBox(height: 10,),
-            
+
                 Padding(
                   padding: const EdgeInsets.only(left: 270.0),
                   child: InkWell(
                       child: const Text('Forgot password?'),
                       onTap: (){
-            
+
                       },
                   ),
                 ),
-            
+
                 const SizedBox(height: 40,),
-            
+
                 Center(
                   child: InkWell(
                     child: Container(
@@ -352,20 +353,20 @@ class _LogInScreenState extends State<LogInScreen> {
                     },
                   ),
                 ),
-            
+
                 const SizedBox(height: 40,),
-            
+
                 const Padding(
                   padding: EdgeInsets.only(left: 22.0),
                   child: Text('---------------------------------------- Or Login with ----------------------------------------'),
                 ),
-            
+
                 const SizedBox(height: 20,),
-                
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-            
+
                     InkWell(
                       child: Container(
                         height: 60,
@@ -384,10 +385,10 @@ class _LogInScreenState extends State<LogInScreen> {
                         signInWithFacebook();
                       },
                     ),
-            
+
                     const SizedBox(width: 10,),
-            
-            
+
+
                     InkWell(
                       child: Container(
                           height: 60,
@@ -417,10 +418,10 @@ class _LogInScreenState extends State<LogInScreen> {
 
                       },
                     ),
-            
+
                     const SizedBox(width: 10,),
-            
-            
+
+
                     Container(
                         height: 60,
                         width: 110,
@@ -435,85 +436,85 @@ class _LogInScreenState extends State<LogInScreen> {
                         )
                     ),
 
-            
+
                   ],
                 ),
-            
-            
 
 
-            
-            
-            
-            
+
+
+
+
+
+
                 const SizedBox(height: 50,),
-            
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-            
+
                     const Text('Don\'t have an account?'),
-            
+
                     const SizedBox(width: 5,),
-            
+
                     InkWell(
                       child: const Text('Sign up',style: TextStyle(fontWeight: FontWeight.bold,),),
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(builder: (context)=> CreateAccountScreen()));
                       },
                     ),
-            
-            
-            
-            
+
+
+
+
                   ],
                 ),
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               ],
             ),
           ),

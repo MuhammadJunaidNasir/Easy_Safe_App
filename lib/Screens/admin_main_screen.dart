@@ -59,17 +59,21 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
   //Near by Users
 
   List<Marker> _markers = [];
+  List<double> _numbers=[];
 
   void _fetchUsersLocations() async {
     // Fetch user locations from Firestore
     QuerySnapshot usersSnapshot = await FirebaseFirestore.instance.collection('Users').get();
 
     // Iterate through each user and add a marker for their location
-    usersSnapshot.docs.forEach((DocumentSnapshot userSnapshot) {
+    for (var userSnapshot in usersSnapshot.docs) {
       Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-      double latitude = userData['latitude'];
-      double longitude = userData['longitude'];
+      double latitude = double.parse(userData['latitude']);
+      double longitude = double.parse(userData['longitude']);
       String name = userData['fullName'];
+
+
+
 
       _markers.add(
         Marker(
@@ -81,7 +85,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
         ),
       );
 
-    });
+    }
 
     setState(() {
 
@@ -98,13 +102,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
   void initState() {
     super.initState();
 
-    _getUserLocation().then(
-          (_) => {
-        getPolylinePoints().then((coordinates) => {
-          generatePolyLineFromPoints(coordinates),
-        }),
-      },
-    );
+    _getUserLocation();
 
     _fetchUsersLocations();
 
@@ -135,6 +133,8 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                 padding: EdgeInsets.only(left: 20.0),
                 child: Text('Welcome, Admin',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 25),),
               ),
+
+               //Text('${_numbers.length}'),
       
                const SizedBox(height: 10,),
       
@@ -155,12 +155,13 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: GoogleMap(
-                      zoomControlsEnabled: false,
+                      zoomControlsEnabled: true,
                       onMapCreated: ((GoogleMapController controller) => _mapController.complete(controller)),
                       initialCameraPosition: CameraPosition(
                         target: _initialCameraPosition,
-                        zoom: 18,
+                        zoom: 8,
                       ),
+
                     markers: Set<Marker>.of(_markers),
                     //polylines: Set<Polyline>.of(polylines.values),
                     // circles: {
@@ -369,7 +370,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
     final GoogleMapController controller = await _mapController.future;
     CameraPosition _newCameraPosition = CameraPosition(
       target: pos,
-      zoom: 15,
+      zoom: 8,
     );
     await controller.animateCamera(
       CameraUpdate.newCameraPosition(_newCameraPosition),
