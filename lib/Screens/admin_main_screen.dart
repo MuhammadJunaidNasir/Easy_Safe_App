@@ -127,7 +127,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
             children: [
 
 
-              const SizedBox(height: 35,),
+              const SizedBox(height: 34,),
       
               const Padding(
                 padding: EdgeInsets.only(left: 20.0),
