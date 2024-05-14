@@ -161,7 +161,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                         target: _initialCameraPosition,
                         zoom: 18,
                       ),
-                    //markers: Set<Marker>.of(_markers),
+                    markers: Set<Marker>.of(_markers),
                     //polylines: Set<Polyline>.of(polylines.values),
                     // circles: {
                     //
