@@ -63,27 +63,13 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
 
   List<Marker> _markers = [];
 
-  CustomInfoWindowController _customInfoWindowController= CustomInfoWindowController();
+
 
 
 
   ////////////////////////////////////////////////////////////
 
-  double _routeDistance = 0.0;
 
-  Future<void> _calculateRouteDistance() async {
-    final apiKey = 'AIzaSyDaWT_X1Bz0R4T-2LkN3Ay5DHyJVLs-YGI';
-    final url = 'https://maps.googleapis.com/maps/api/directions/json?origin=${_adminPosition?.latitude},${_adminPosition?.longitude}&destination=${_destinationPosition.latitude},${_destinationPosition.longitude}&key=$apiKey';
-
-    final response = await http.get(Uri.parse(url));
-    final data = json.decode(response.body);
-    final distance = data['routes'][0]['legs'][0]['distance']['value'];
-
-    // Convert distance from meters to kilometers
-    setState(() {
-      _routeDistance = distance / 1000;
-    });
-  }
 
 ////////////////////////////////////////////////////
 
@@ -94,7 +80,7 @@ double? distance;
   ////////////////////////////////////////////////////////////
 
   Position? _adminPosition;
-  Position? _destinationposition;
+
 
   void _fetchUsersLocations() async {
     // Fetch user locations from Firestore
@@ -110,12 +96,6 @@ double? distance;
 
       _adminPosition= await Geolocator.getCurrentPosition();
 
-      //_destinationposition= Position(longitude: longitude, latitude: latitude, timestamp: DateTime.timestamp(), accuracy: 1, altitude: 1, altitudeAccuracy: 1, heading: 1, headingAccuracy: 1, speed: 1, speedAccuracy: 1);
-
-
-      // _calculateRouteDistance();
-
-       //distance=_routeDistance;
 
 
 
@@ -130,7 +110,7 @@ double? distance;
           position: LatLng(latitude, longitude),
           infoWindow: InfoWindow(
             title: name,
-            snippet: role=='admin'? '': '${(distance!/1000)} KM Away',
+            snippet: role=='admin'? '': '${(distance!/1000).toInt()} KM Away',
 
           ),
           visible: true,
