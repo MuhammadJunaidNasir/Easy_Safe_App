@@ -9,7 +9,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:swaysafeguardapp/Screens/change_password_screen.dart';
 import 'package:swaysafeguardapp/Screens/login_screen.dart';
+import 'package:swaysafeguardapp/Screens/edit_profile_details_screen.dart';
+import 'package:swaysafeguardapp/Screens/my_profile_details_screen.dart';
+import 'package:swaysafeguardapp/Screens/utilils.dart';
 
 import 'consts.dart';
 import 'package:custom_info_window/custom_info_window.dart';
@@ -71,7 +75,35 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
 
 
 
-////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+  double? _distance;
+
+  Future<void> getRouteDistance(double startLat, double startLng, double endLat, double endLng) async {
+    final apiKey = 'AIzaSyDaWT_X1Bz0R4T-2LkN3Ay5DHyJVLs-YGI';
+
+
+    final url = 'https://maps.googleapis.com/maps/api/directions/json?origin=$startLat,$startLng&destination=$endLat,$endLng&key=$apiKey';
+
+    final response = await http.get(Uri.parse(url));
+    final data = json.decode(response.body);
+
+    if (data['status'] == 'OK') {
+      final route = data['routes'][0];
+      final legs = route['legs'][0];
+      final distance = legs['distance']['value']; // Distance in meters
+      setState(() {
+        _distance=distance;
+      });
+
+    }
+    else {
+      throw Exception('Failed to fetch route data');
+    }
+  }
+
+
+///////////////////////////////////////////////////////////////////////////////
 
 double? distance;
 
@@ -81,6 +113,9 @@ double? distance;
 
   Position? _adminPosition;
 
+  String? _name;
+  String? _email;
+  String? _role;
 
   void _fetchUsersLocations() async {
     // Fetch user locations from Firestore
@@ -91,8 +126,9 @@ double? distance;
       Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
       double latitude = double.parse(userData['latitude']);
       double longitude = double.parse(userData['longitude']);
-      String name = userData['fullName'];
-      String role= userData['role'];
+       _name = userData['fullName'];
+       _email = userData['email'];
+       _role = userData['role'];
 
       _adminPosition= await Geolocator.getCurrentPosition();
 
@@ -102,15 +138,18 @@ double? distance;
        distance=  Geolocator.distanceBetween(_adminPosition!.latitude, _adminPosition!.longitude, latitude, longitude);
 
 
+         // LatLng _userPosition= LatLng(latitude, longitude);
+         //
+         //  getRouteDistance(_adminPosition!.latitude, _adminPosition!.longitude, _userPosition.latitude, _userPosition.longitude);
 
 
       _markers.add(
         Marker(
-          markerId: MarkerId(name),
+          markerId: MarkerId(_name!),
           position: LatLng(latitude, longitude),
           infoWindow: InfoWindow(
-            title: name,
-            snippet: role=='admin'? '': '${(distance!/1000).toInt()} KM Away',
+            title: _name,
+            snippet: _role=='admin'? '': '${(distance!/1000)?.toInt()} KM Away',
 
           ),
           visible: true,
@@ -139,9 +178,39 @@ double? distance;
     _fetchUsersLocations();
 
 
+
+
+
+
+
+
+
   }
 
   FirebaseAuth _auth= FirebaseAuth.instance;
+
+  ////////////////////////////
+
+  Future<void> _deleteAccount() async {
+    try {
+      await _auth.currentUser?.delete();
+      //Utilis().toastMessage('Your account has been deleted successfully!');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Your account has been deleted successfully!'),
+          backgroundColor: Colors.green,
+          showCloseIcon: true,
+          duration: Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+          dismissDirection: DismissDirection.horizontal,
+        ),
+      );
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LogInScreen()));
+    } catch (e) {
+      Utilis().toastMessage(e.toString());
+    }
+  }
 
 
 
@@ -154,6 +223,95 @@ double? distance;
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              UserAccountsDrawerHeader(
+                currentAccountPicture: CircleAvatar(
+                  child: Center(child: Text('${_name?[0]}'),),
+                ),
+                accountName: Text('$_name'),
+                accountEmail: Text('$_email'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('My Profile'),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const MyProfileDetailsScreen()));
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text('Edit Profile'),
+                onTap: () {
+                  
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProfileDetailsScreen()));
+
+                },
+              ),
+
+              ListTile(
+                leading: const Icon(Icons.lock),
+                title: const Text('Change Password'),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const ChangePasswordScreen()));
+                },
+              ),
+              // ListTile(
+              //   leading: const Icon(Icons.delete),
+              //   title: const Text('Delete Account'),
+              //   onTap: () {
+              //     showDialog(
+              //         context: context,
+              //         builder: (BuildContext context) {
+              //           return AlertDialog(
+              //             title: const Text('Confirmation !'),
+              //             content: const Text(
+              //                 'Are you sure you want to delete your account?'),
+              //             actions: [
+              //               TextButton(
+              //                 onPressed: () {
+              //                   _deleteAccount();
+              //                   Navigator.pop(context);
+              //                 },
+              //                 child: const Text('DELETE'),
+              //               ),
+              //               TextButton(
+              //                 onPressed: () {
+              //                   Navigator.pop(context);
+              //                 },
+              //                 child: const Text('NO'),
+              //               ),
+              //             ],
+              //           );
+              //         }
+              //     );
+              //   },
+              // ),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text('Log out'),
+                onTap: () {
+                  _auth.signOut();
+                  
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const LogInScreen()));
+                
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Account Logged out successfully!'),
+                      backgroundColor: Colors.green,
+                      showCloseIcon: true,
+                      duration: Duration(seconds: 3),
+                      behavior: SnackBarBehavior.floating,
+                      dismissDirection: DismissDirection.horizontal,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
         body: Container(
           child:   Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,7 +327,7 @@ double? distance;
                 child: Text('Welcome, Admin',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 25),),
               ),
 
-               //Text('${_numbers.length}'),
+
       
                const SizedBox(height: 10,),
       
@@ -199,18 +357,18 @@ double? distance;
 
                     markers: Set<Marker>.of(_markers),
                     //polylines: Set<Polyline>.of(polylines.values),
-                    // circles: {
-                    //
-                    //   Circle(
-                    //     circleId: const CircleId('circleId'),
-                    //     center:  _initialCameraPosition,
-                    //     fillColor: Colors.green.withOpacity(0.4),
-                    //     radius: 500,
-                    //     strokeWidth: 1,
-                    //     strokeColor: Colors.green,
-                    //   ),
-                    //
-                    // },
+                    circles: {
+
+                      Circle(
+                        circleId: const CircleId('circleId'),
+                        center:  _initialCameraPosition,
+                        fillColor: Colors.blue.withOpacity(0.4),
+                        radius: 2000,
+                        strokeWidth: 1,
+                        strokeColor: Colors.blue,
+                      ),
+
+                    },
 
 
 
@@ -251,19 +409,39 @@ double? distance;
               ),
 
               Expanded(
-                child: ListView.builder(
-                  itemCount: 50,
-                  itemBuilder: (context, index) {
-                    return  ListTile(
-                      leading:  CircleAvatar(
-                        radius: 35,
-                        child: Image.network('https://giftolexia.com/wp-content/uploads/2015/11/dummy-profile.png'),
-                      ),
-                      title: const Text('Junaid',style: TextStyle(fontWeight: FontWeight.bold),),
-                      subtitle: Text('Golden Gate Park'),
-                      trailing: Text('Today \n ${DateTime.now().hour}: ${DateTime.now().minute}'),
-                    );
-                  },
+                child: FutureBuilder(
+                  // Fetch data from Firestore collection 'Users'
+                  future: FirebaseFirestore.instance.collection('Users').get(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    // Check if the connection is in waiting state
+                    // if (snapshot.connectionState == ConnectionState.waiting) {
+                    //   return const Center(
+                    //     child: CircularProgressIndicator(),
+                    //   );
+                    // }
+                    // Check if there's an error
+                     if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    }
+                    // If data is available
+                    else {
+                      return ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          // Get user data from each document
+                          DocumentSnapshot user = snapshot.data!.docs[index];
+                          return ListTile(
+                            leading: CircleAvatar(backgroundColor: Colors.blue,radius: 25,child: Center(child: Text('${user['fullName'][0]}',style: TextStyle(color: Colors.white),),),),
+                            title: Text(user['fullName']),
+                            subtitle: Text(user['address']),
+                            trailing: Text('Today \n ${DateTime.now().hour}:${DateTime.now().minute}'),
+                          );
+                        }, // itemBuilder
+                      ); // ListView.builder
+                    }
+                  }, // builder
                 ),
               ),
       
@@ -407,7 +585,7 @@ double? distance;
     final GoogleMapController controller = await _mapController.future;
     CameraPosition _newCameraPosition = CameraPosition(
       target: pos,
-      zoom: 8,
+      zoom: 10,
     );
     await controller.animateCamera(
       CameraUpdate.newCameraPosition(_newCameraPosition),

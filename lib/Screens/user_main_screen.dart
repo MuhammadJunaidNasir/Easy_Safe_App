@@ -8,10 +8,12 @@ import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:swaysafeguardapp/Screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:swaysafeguardapp/Screens/profile_details_screen.dart';
+import 'package:swaysafeguardapp/Screens/edit_profile_details_screen.dart';
 import 'package:swaysafeguardapp/Screens/utilils.dart';
 
 import 'admin_main_screen.dart';
+import 'change_password_screen.dart';
+import 'my_profile_details_screen.dart';
 
 class UserMainScreen extends StatefulWidget {
   const UserMainScreen({super.key});
@@ -130,6 +132,105 @@ class _UserMainScreenState extends State<UserMainScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              UserAccountsDrawerHeader(
+                currentAccountPicture: CircleAvatar(
+                  child: Center(child: Text('${_name?[0]}'),),
+                ),
+                accountName: Text('$_name'),
+                accountEmail: Text('$_email'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('My Profile'),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const MyProfileDetailsScreen()));
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text('Edit Profile'),
+                onTap: () {
+
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProfileDetailsScreen()));
+
+                },
+              ),
+
+              ListTile(
+                leading: const Icon(Icons.lock),
+                title: const Text('Change Password'),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const ChangePasswordScreen()));
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete),
+                title: const Text('Delete Account'),
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Confirmation !'),
+                          content: const Text(
+                              'Are you sure you want to delete your account?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+
+                                //_deleteAccount();
+
+                                FirebaseFirestore.instance.collection('Users').doc(_auth.currentUser!.email).delete();
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Your account and all its data have deleted!'),
+                                  ),
+                                );
+
+                                Navigator.pop(context);
+                              },
+                              child: const Text('DELETE'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('NO'),
+                            ),
+                          ],
+                        );
+                      }
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text('Log out'),
+                onTap: () {
+                  _auth.signOut();
+
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const LogInScreen()));
+
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Account Logged out successfully!'),
+                      backgroundColor: Colors.green,
+                      showCloseIcon: true,
+                      duration: Duration(seconds: 3),
+                      behavior: SnackBarBehavior.floating,
+                      dismissDirection: DismissDirection.horizontal,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
         body:SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -146,14 +247,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
                       child: Text('Welcome, $_userName',style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 28),),
                     ),
           
-                    const SizedBox(width: 50,),
-          
-                    InkWell(child: Icon(Icons.logout,color: Colors.green,),
-                    onTap: (){
-                      _auth.signOut();
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> const LogInScreen()));
-                    },
-                    ),
+
                   ],
                 ),
           

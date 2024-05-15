@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swaysafeguardapp/Cubit/login_cubit.dart';
 import 'package:swaysafeguardapp/Screens/home_screen.dart';
 import 'package:swaysafeguardapp/Screens/login_screen.dart';
-import 'package:swaysafeguardapp/Screens/profile_details_screen.dart';
+import 'package:swaysafeguardapp/Screens/edit_profile_details_screen.dart';
 import 'package:swaysafeguardapp/Screens/splash_screen.dart';
 import 'package:swaysafeguardapp/Screens/user_main_screen.dart';
 

@@ -334,14 +334,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           fireStore.doc(_emailController.text.toString()).set({
                             'userName': _usernameController.text.toString(),
                             'email': _emailController.text.toString(),
-                            'fullName': '',
+                            'fullName': 'NoName',
                             'dob': '',
                             'contactNumber': '',
                             'emergencyContactNumber': '',
                             'bloodGroup':'',
                             'address': '',
-                            'latitude':'',
-                            'longitude':'',
+                            'latitude':'32',
+                            'longitude':'73',
                           }).then((value) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
