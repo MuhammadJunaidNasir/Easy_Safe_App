@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:swaysafeguardapp/Screens/login_screen.dart';
 
 import 'consts.dart';
+import 'package:custom_info_window/custom_info_window.dart';
+import 'package:http/http.dart' as http;
 
 class AdminMainScreen extends StatefulWidget {
   const AdminMainScreen({super.key});
@@ -59,7 +62,39 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
   //Near by Users
 
   List<Marker> _markers = [];
-  List<double> _numbers=[];
+
+  CustomInfoWindowController _customInfoWindowController= CustomInfoWindowController();
+
+
+
+  ////////////////////////////////////////////////////////////
+
+  double _routeDistance = 0.0;
+
+  Future<void> _calculateRouteDistance() async {
+    final apiKey = 'AIzaSyDaWT_X1Bz0R4T-2LkN3Ay5DHyJVLs-YGI';
+    final url = 'https://maps.googleapis.com/maps/api/directions/json?origin=${_adminPosition?.latitude},${_adminPosition?.longitude}&destination=${_destinationPosition.latitude},${_destinationPosition.longitude}&key=$apiKey';
+
+    final response = await http.get(Uri.parse(url));
+    final data = json.decode(response.body);
+    final distance = data['routes'][0]['legs'][0]['distance']['value'];
+
+    // Convert distance from meters to kilometers
+    setState(() {
+      _routeDistance = distance / 1000;
+    });
+  }
+
+////////////////////////////////////////////////////
+
+double? distance;
+
+
+
+  ////////////////////////////////////////////////////////////
+
+  Position? _adminPosition;
+  Position? _destinationposition;
 
   void _fetchUsersLocations() async {
     // Fetch user locations from Firestore
@@ -71,6 +106,20 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       double latitude = double.parse(userData['latitude']);
       double longitude = double.parse(userData['longitude']);
       String name = userData['fullName'];
+      String role= userData['role'];
+
+      _adminPosition= await Geolocator.getCurrentPosition();
+
+      //_destinationposition= Position(longitude: longitude, latitude: latitude, timestamp: DateTime.timestamp(), accuracy: 1, altitude: 1, altitudeAccuracy: 1, heading: 1, headingAccuracy: 1, speed: 1, speedAccuracy: 1);
+
+
+      // _calculateRouteDistance();
+
+       //distance=_routeDistance;
+
+
+
+       distance=  Geolocator.distanceBetween(_adminPosition!.latitude, _adminPosition!.longitude, latitude, longitude);
 
 
 
@@ -81,7 +130,10 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
           position: LatLng(latitude, longitude),
           infoWindow: InfoWindow(
             title: name,
+            snippet: role=='admin'? '': '${(distance!/1000)} KM Away',
+
           ),
+          visible: true,
         ),
       );
 
@@ -110,6 +162,9 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
   }
 
   FirebaseAuth _auth= FirebaseAuth.instance;
+
+
+
 
 
 
@@ -155,7 +210,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: GoogleMap(
-                      zoomControlsEnabled: true,
+                      zoomControlsEnabled: false,
                       onMapCreated: ((GoogleMapController controller) => _mapController.complete(controller)),
                       initialCameraPosition: CameraPosition(
                         target: _initialCameraPosition,
@@ -335,6 +390,8 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
 
     setState(() {
       _initialCameraPosition = LatLng(position.latitude, position.longitude);
+
+
     });
 
 

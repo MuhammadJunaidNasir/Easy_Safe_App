@@ -130,165 +130,168 @@ class _UserMainScreenState extends State<UserMainScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body:Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              const SizedBox(height: 10,),
-
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: Text('Welcome, $_userName',style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 28),),
-                  ),
-
-                  const SizedBox(width: 85,),
-
-                  InkWell(child: Icon(Icons.logout,color: Colors.green,),
-                  onTap: (){
-                    _auth.signOut();
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> const LogInScreen()));
-                  },
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 40,),
-
-              const Padding(
-                padding: EdgeInsets.only(left: 20.0),
-                child: Text('Nearby Users',style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontSize: 15),),
-              ),
-
-              const SizedBox(height: 5,),
-
-
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Container(
-                  height: 500,
-                  width: 350,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.brown,
-                  ),
-                  child:  GoogleMap(
-                    zoomControlsEnabled: false,
-                    onMapCreated: ((GoogleMapController controller) => _mapController.complete(controller)),
-                      initialCameraPosition: CameraPosition(
-                        target: _initialCameraPosition,
-                        zoom: 10,
-                      ),
-
-                    markers: {
-
-                      Marker(
-                        markerId: const MarkerId('_userCurrentPosition',),
-                        icon: BitmapDescriptor.defaultMarker,
-                        position: _initialCameraPosition,
-                        infoWindow: const InfoWindow(title: 'User Current Location'),
-                      ),
-
-
+        body:SingleChildScrollView(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+          
+                const SizedBox(height: 10,),
+          
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 20.0),
+                      child: Text('Welcome, $_userName',style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 28),),
+                    ),
+          
+                    const SizedBox(width: 50,),
+          
+                    InkWell(child: Icon(Icons.logout,color: Colors.green,),
+                    onTap: (){
+                      _auth.signOut();
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> const LogInScreen()));
                     },
-
-                  ),
-
-                ),
-              ),
-
-              const SizedBox(height: 15,),
-
-
-               Padding(
-                padding: EdgeInsets.only(left: 20.0),
-                child: Row(
-                  children: [
-
-                    Text('Fall Detection Sensor',style: TextStyle(fontWeight: FontWeight.bold),),
-
-                    const SizedBox(width: 180,),
-
-                    Switch(
-                      value: _detectionEnabled,
-                      onChanged: (value) {
-                        setState(() {
-                          _detectionEnabled = value;
-                        });
-                      },
-                      activeColor: Colors.blue,
                     ),
-
-
-
                   ],
                 ),
-              ),
-
-              Padding(
-                padding: EdgeInsets.only(left: 20.0),
-                child: Row(
-                  children: [
-
-                    const Text('Live Location',style: TextStyle(fontWeight: FontWeight.bold),),
-
-                    const SizedBox(width: 222,),
-
-                    Switch(
-                      value: _locationEnabled,
-                      onChanged: (value) {
-                        setState(() {
-                          _locationEnabled = value;
-                        });
-                      },
-                      activeColor: Colors.blue,
-                    ),
-
-
-
-                  ],
+          
+                const SizedBox(height: 40,),
+          
+                const Padding(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text('Nearby Users',style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontSize: 15),),
                 ),
-              ),
-
-              const SizedBox(height: 5,),
-
-              Center(
-                child: InkWell(
+          
+                const SizedBox(height: 5,),
+          
+          
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
                   child: Container(
-                    height: 50,
+                    height: 500,
                     width: 350,
                     decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.brown,
                     ),
-                    child:  const Center(child:  Text('Share Location Now',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),),),
+                    child:  GoogleMap(
+                      zoomControlsEnabled: false,
+                      onMapCreated: ((GoogleMapController controller) => _mapController.complete(controller)),
+                        initialCameraPosition: CameraPosition(
+                          target: _initialCameraPosition,
+                          zoom: 10,
+                        ),
+          
+                      markers: {
+          
+                        Marker(
+                          markerId: const MarkerId('_userCurrentPosition',),
+                          icon: BitmapDescriptor.defaultMarker,
+                          position: _initialCameraPosition,
+                          infoWindow: const InfoWindow(title: 'User Current Location'),
+                        ),
+          
+          
+                      },
+          
+                    ),
+          
                   ),
-
                 ),
-              ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            ],
+          
+                const SizedBox(height: 15,),
+          
+          
+                 Padding(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Row(
+                    children: [
+          
+                      Text('Fall Detection Sensor',style: TextStyle(fontWeight: FontWeight.bold),),
+          
+                      const SizedBox(width: 180,),
+          
+                      Switch(
+                        value: _detectionEnabled,
+                        onChanged: (value) {
+                          setState(() {
+                            _detectionEnabled = value;
+                          });
+                        },
+                        activeColor: Colors.blue,
+                      ),
+          
+          
+          
+                    ],
+                  ),
+                ),
+          
+                Padding(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Row(
+                    children: [
+          
+                      const Text('Live Location',style: TextStyle(fontWeight: FontWeight.bold),),
+          
+                      const SizedBox(width: 222,),
+          
+                      Switch(
+                        value: _locationEnabled,
+                        onChanged: (value) {
+                          setState(() {
+                            _locationEnabled = value;
+                          });
+                        },
+                        activeColor: Colors.blue,
+                      ),
+          
+          
+          
+                    ],
+                  ),
+                ),
+          
+                const SizedBox(height: 5,),
+          
+                Center(
+                  child: InkWell(
+                    child: Container(
+                      height: 50,
+                      width: 350,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child:  const Center(child:  Text('Share Location Now',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),),),
+                    ),
+          
+                  ),
+                ),
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+              ],
+            ),
           ),
         ),
       

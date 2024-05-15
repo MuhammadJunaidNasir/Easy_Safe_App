@@ -46,6 +46,8 @@ dependencies:
   permission_handler: ^11.3.1
   geolocator: ^11.0.0
   flutter_polyline_points: ^2.0.0
+  custom_info_window: ^1.0.1
+  http: ^1.2.1
 
 dev_dependencies:
   flutter_test:
