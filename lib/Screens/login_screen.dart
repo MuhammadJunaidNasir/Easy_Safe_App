@@ -18,12 +18,10 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
+  bool _hidePassword = true;
 
-
-  bool _hidePassword=true;
-
-  TextEditingController _emailController= TextEditingController();
-  TextEditingController _passwordController= TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -37,61 +35,51 @@ class _LogInScreenState extends State<LogInScreen> {
     return value.length >= 8;
   }
 
-  bool _validEmail=false;
+  bool _validEmail = false;
 
-
-  bool _isLoading=false;
-
-
+  bool _isLoading = false;
 
   //////////////////////////////////////
 
-  FirebaseAuth _auth= FirebaseAuth.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
 /////////////////////////////////////////////////////
 
-  void _signinwithGoogle(){
-
-    try{
-      GoogleAuthProvider _googleAuthProvider= GoogleAuthProvider();
+  void _signinwithGoogle() {
+    try {
+      GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
       _auth.signInWithProvider(_googleAuthProvider);
 
       _auth.authStateChanges().listen((event) {
         setState(() {
-          _user=event;
+          _user = event;
         });
       });
-    }
-    catch(error){
+    } catch (error) {
       print(error);
     }
-
   }
 
   ////////////////////////////////
 
+  String _userName = '';
+  String _name = '';
+  String _email = '';
+  String _role = "";
 
-  String _userName='';
-  String _name='';
-  String _email='';
-  String _role="";
-
-  Future <void> _getUserData()async{
-
-    final DocumentSnapshot _userData= await FirebaseFirestore.instance.collection('Users').doc(_auth.currentUser!.email).get();
+  Future<void> _getUserData() async {
+    final DocumentSnapshot _userData = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_auth.currentUser!.email)
+        .get();
 
     setState(() {
-      _userName= _userData.get('userName').toString();
-      _name= _userData.get('fullName').toString();
-      _email= _userData.get('email').toString();
-      _role= _userData.get('role').toString();
+      _userName = _userData.get('userName').toString();
+      _name = _userData.get('fullName').toString();
+      _email = _userData.get('email').toString();
+      _role = _userData.get('role').toString();
     });
-
   }
-
-
-
-
 
   ///////////////////////////////
 
@@ -105,21 +93,16 @@ class _LogInScreenState extends State<LogInScreen> {
 
     _auth.authStateChanges().listen((event) {
       setState(() {
-        _user=event;
+        _user = event;
       });
     });
-
-
-
   }
-
 
 //////////////////////////////////////////////////////////
 
-
   @override
   Widget build(BuildContext context) {
-    final _height= MediaQuery.of(context).size.height;
+    final _height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -128,22 +111,37 @@ class _LogInScreenState extends State<LogInScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-                const SizedBox(height: 150,),
-
-                const Padding(
-                  padding: EdgeInsets.only(left: 20.0),
-                  child: Text('Log in',style: TextStyle(color: Colors.deepPurpleAccent, fontWeight: FontWeight.bold, fontSize: 28),),
+                const SizedBox(
+                  height: 150,
                 ),
-
-                const SizedBox(height: 25,),
-
                 const Padding(
                   padding: EdgeInsets.only(left: 20.0),
-                  child: Text('Email',style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 15),),
+                  child: Text(
+                    'Log in',
+                    style: TextStyle(
+                        color: Colors.deepPurpleAccent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 28),
+                  ),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Text(
+                    'Email',
+                    style: TextStyle(
+                        color: Colors.black54,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                  ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 20.0,right: 25,),
+                  padding: const EdgeInsets.only(
+                    left: 20.0,
+                    right: 25,
+                  ),
                   child: TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -152,20 +150,18 @@ class _LogInScreenState extends State<LogInScreen> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      suffixIcon: _validEmail?Icon(Icons.check_circle): Text(''),
+                      suffixIcon:
+                          _validEmail ? Icon(Icons.check_circle) : Text(''),
                     ),
-                    validator: (value){
-
-
-                      if(value==null || value.isEmpty){
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Please enter email'),
                           ),
                         );
-                      }
-                      else{
-                        if(!isValidEmail(value!)){
+                      } else {
+                        if (!isValidEmail(value!)) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Please enter valid email'),
@@ -174,29 +170,30 @@ class _LogInScreenState extends State<LogInScreen> {
                         }
                       }
 
-                     setState(() {
-                       _validEmail=isValidEmail(value!);
-                     });
-
-
-
-
-
-
+                      setState(() {
+                        _validEmail = isValidEmail(value!);
+                      });
                     },
                   ),
                 ),
-
-
-                const SizedBox(height: 20,),
-
-
+                const SizedBox(
+                  height: 20,
+                ),
                 const Padding(
                   padding: EdgeInsets.only(left: 20.0),
-                  child: Text('Password',style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 15),),
+                  child: Text(
+                    'Password',
+                    style: TextStyle(
+                        color: Colors.black54,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                  ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 20.0,right: 25,),
+                  padding: const EdgeInsets.only(
+                    left: 20.0,
+                    right: 25,
+                  ),
                   child: TextFormField(
                     controller: _passwordController,
                     obscureText: _hidePassword,
@@ -207,45 +204,46 @@ class _LogInScreenState extends State<LogInScreen> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      suffixIcon: _hidePassword==true? InkWell(child: Icon(Icons.visibility),onTap: (){_hidePassword=false;setState(() {
-
-                      });},) :InkWell(child: const Icon(Icons.visibility_off),onTap: (){_hidePassword=true;setState(() {
-
-                      });},),
+                      suffixIcon: _hidePassword == true
+                          ? InkWell(
+                              child: Icon(Icons.visibility),
+                              onTap: () {
+                                _hidePassword = false;
+                                setState(() {});
+                              },
+                            )
+                          : InkWell(
+                              child: const Icon(Icons.visibility_off),
+                              onTap: () {
+                                _hidePassword = true;
+                                setState(() {});
+                              },
+                            ),
                     ),
-                    validator: (value){
-
-                      if(value==null || value.isEmpty){
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Please enter password'),
                           ),
                         );
-
                       }
-
-
-
-
-
                     },
                   ),
                 ),
-
-                const SizedBox(height: 10,),
-
+                const SizedBox(
+                  height: 10,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 270.0),
                   child: InkWell(
-                      child: const Text('Forgot password?'),
-                      onTap: (){
-
-                      },
+                    child: const Text('Forgot password?'),
+                    onTap: () {},
                   ),
                 ),
-
-                const SizedBox(height: 40,),
-
+                const SizedBox(
+                  height: 40,
+                ),
                 Center(
                   child: InkWell(
                     child: Container(
@@ -255,12 +253,21 @@ class _LogInScreenState extends State<LogInScreen> {
                         color: Colors.blue,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child:  Center(child: _isLoading==true? const CircularProgressIndicator(color: Colors.white,) : const Text('Log In',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),),),
+                      child: Center(
+                        child: _isLoading == true
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                'Log In',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18),
+                              ),
+                      ),
                     ),
-                    onTap: (){
-
-
-
+                    onTap: () {
                       // if(_formKey.currentState!.validate()){
                       //   BlocProvider.of<LoginCubit>(context).loginToAccount(_emailController.text.toString(), _passwordController.text.toString());
                       //
@@ -271,37 +278,35 @@ class _LogInScreenState extends State<LogInScreen> {
                       //   }
                       // }
 
-
-
-
-
-
-
-
-
-                      if(_formKey.currentState!.validate()){
-
+                      if (_formKey.currentState!.validate()) {
                         setState(() {
-                          _isLoading=true;
+                          _isLoading = true;
                         });
 
-                        _auth.signInWithEmailAndPassword(
-                            email: _emailController.text.toString(),
-                            password: _passwordController.text.toString()).then((value){
+                        _auth
+                            .signInWithEmailAndPassword(
+                                email: _emailController.text.toString(),
+                                password: _passwordController.text.toString())
+                            .then((value) {
+                          String? email = _user?.email;
 
-                              String? email= _user?.email;
-
-                          if(email=="mjn7439@gmail.com"){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const AdminMainScreen()));
-                          }
-                          else{
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const UserMainScreen()));
+                          if (email == "mjn7439@gmail.com") {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AdminMainScreen()));
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const UserMainScreen()));
                           }
 
                           setState(() {
-                            _isLoading=false;
+                            _isLoading = false;
                           });
-
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -313,16 +318,9 @@ class _LogInScreenState extends State<LogInScreen> {
                               dismissDirection: DismissDirection.horizontal,
                             ),
                           );
-
-
-
-
-
-
-                        }).onError((error, stackTrace){
-
+                        }).onError((error, stackTrace) {
                           setState(() {
-                            _isLoading=false;
+                            _isLoading = false;
                           });
 
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -336,59 +334,28 @@ class _LogInScreenState extends State<LogInScreen> {
                             ),
                           );
                         });
-                      }
-                      else if(!_formKey.currentState!.validate()){
+                      } else if (!_formKey.currentState!.validate()) {
                         setState(() {
-                          _isLoading=false;
+                          _isLoading = false;
                         });
                       }
-
-
-
-
-
-
-
-
                     },
                   ),
                 ),
-
-                const SizedBox(height: 40,),
-
+                const SizedBox(
+                  height: 40,
+                ),
                 const Padding(
                   padding: EdgeInsets.only(left: 22.0),
-                  child: Text('---------------------------------------- Or Login with ----------------------------------------'),
+                  child: Text(
+                      '---------------------------------------- Or Login with ----------------------------------------'),
                 ),
-
-                const SizedBox(height: 20,),
-
+                const SizedBox(
+                  height: 20,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
-                    InkWell(
-                      child: Container(
-                        height: 60,
-                        width: 110,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            width: 0.5,
-                          ),
-                        ),
-                        child: const Center(
-                          child: Icon(Icons.facebook,color: Colors.blue,),
-                        )
-                      ),
-                      onTap: (){
-                        signInWithFacebook();
-                      },
-                    ),
-
-                    const SizedBox(width: 10,),
-
-
                     InkWell(
                       child: Container(
                           height: 60,
@@ -399,29 +366,50 @@ class _LogInScreenState extends State<LogInScreen> {
                               width: 0.5,
                             ),
                           ),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white10,
-                            child: Image.network(
-                              'http://pngimg.com/uploads/google/google_PNG19635.png',
-                              height: 28,
-                              width: 28,
-                              //fit:BoxFit.cover,
+                          child: const Center(
+                            child: Icon(
+                              Icons.facebook,
+                              color: Colors.blue,
                             ),
-                          ),
-                      ),
-                      onTap: (){
-
-                              _signinwithGoogle();
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=> const UserMainScreen()));
-
-
-
+                          )),
+                      onTap: () {
+                        signInWithFacebook();
                       },
                     ),
-
-                    const SizedBox(width: 10,),
-
-
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    InkWell(
+                      child: Container(
+                        height: 60,
+                        width: 110,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            width: 0.5,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white10,
+                          child: Image.network(
+                            'http://pngimg.com/uploads/google/google_PNG19635.png',
+                            height: 28,
+                            width: 28,
+                            //fit:BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        _signinwithGoogle();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const UserMainScreen()));
+                      },
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     Container(
                         height: 60,
                         width: 110,
@@ -433,88 +421,36 @@ class _LogInScreenState extends State<LogInScreen> {
                         ),
                         child: const Center(
                           child: Icon(Icons.apple),
-                        )
-                    ),
-
-
+                        )),
                   ],
                 ),
-
-
-
-
-
-
-
-
-                const SizedBox(height: 50,),
-
+                const SizedBox(
+                  height: 50,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-
                     const Text('Don\'t have an account?'),
-
-                    const SizedBox(width: 5,),
-
+                    const SizedBox(
+                      width: 5,
+                    ),
                     InkWell(
-                      child: const Text('Sign up',style: TextStyle(fontWeight: FontWeight.bold,),),
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> CreateAccountScreen()));
+                      child: const Text(
+                        'Sign up',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CreateAccountScreen()));
                       },
                     ),
-
-
-
-
                   ],
                 ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               ],
             ),
           ),

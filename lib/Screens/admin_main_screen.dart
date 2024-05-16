@@ -149,7 +149,7 @@ double? distance;
           position: LatLng(latitude, longitude),
           infoWindow: InfoWindow(
             title: _name,
-            snippet: _role=='admin'? '': '${(distance!/1000)?.toInt()} KM Away',
+            snippet: _role=='admin'? '(Admin)': '${(distance!/1000).toInt()} KM Away',
 
           ),
           visible: true,
@@ -650,6 +650,7 @@ class LocationController {
     return _locationController;
   }
 }
+
 
 
 

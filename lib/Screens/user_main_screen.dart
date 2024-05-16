@@ -23,41 +23,31 @@ class UserMainScreen extends StatefulWidget {
 }
 
 class _UserMainScreenState extends State<UserMainScreen> {
-
-
-  FirebaseAuth _auth= FirebaseAuth.instance;
-
-
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
 ///////////////////////////////////////////////////
-  final Completer<GoogleMapController> _mapController =Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
 
   LatLng _initialCameraPosition = LatLng(33.09188702412846, 72.24164574110249);
 
-
-
-
-
-
-
-
 ///////////////////////////////
 
-  String _userName='';
-  String _name='';
-  String _email='';
+  String _userName = '';
+  String _name = '';
+  String _email = '';
 
-  Future <void> _getUserData()async{
-
-    final DocumentSnapshot _userData= await FirebaseFirestore.instance.collection('Users').doc(_auth.currentUser!.email).get();
+  Future<void> _getUserData() async {
+    final DocumentSnapshot _userData = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_auth.currentUser!.email)
+        .get();
 
     setState(() {
-      _userName= _userData.get('userName').toString();
-      _name= _userData.get('fullName').toString();
-      _email= _userData.get('email').toString();
-
+      _userName = _userData.get('userName').toString();
+      _name = _userData.get('fullName').toString();
+      _email = _userData.get('email').toString();
     });
-
   }
 
   /////////////////////////////////
@@ -72,25 +62,18 @@ class _UserMainScreenState extends State<UserMainScreen> {
 
     _getUserData();
 
-
-
     _auth.authStateChanges().listen((event) {
       setState(() {
-        _user=event;
+        _user = event;
       });
     });
 
     _getUserLocation();
-
-
-
   }
 
   ////////////////////////////////////
 
-  final fireStore= FirebaseFirestore.instance.collection('Users');
-
-
+  final fireStore = FirebaseFirestore.instance.collection('Users');
 
   ///////////////////////////
 
@@ -115,18 +98,12 @@ class _UserMainScreenState extends State<UserMainScreen> {
     }
   }
 
-
-
   //////////////////////
 
-
- bool _detectionEnabled=true;
-  bool _locationEnabled=true;
-
+  bool _detectionEnabled = true;
+  bool _locationEnabled = true;
 
   //////////////////////
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +114,9 @@ class _UserMainScreenState extends State<UserMainScreen> {
             children: [
               UserAccountsDrawerHeader(
                 currentAccountPicture: CircleAvatar(
-                  child: Center(child: Text('${_name?[0]}'),),
+                  child: Center(
+                    child: Text('${_name}'),
+                  ),
                 ),
                 accountName: Text('$_name'),
                 accountEmail: Text('$_email'),
@@ -146,24 +125,31 @@ class _UserMainScreenState extends State<UserMainScreen> {
                 leading: const Icon(Icons.person),
                 title: const Text('My Profile'),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const MyProfileDetailsScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const MyProfileDetailsScreen()));
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.edit),
                 title: const Text('Edit Profile'),
                 onTap: () {
-
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProfileDetailsScreen()));
-
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ProfileDetailsScreen()));
                 },
               ),
-
               ListTile(
                 leading: const Icon(Icons.lock),
                 title: const Text('Change Password'),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const ChangePasswordScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ChangePasswordScreen()));
                 },
               ),
               ListTile(
@@ -180,14 +166,17 @@ class _UserMainScreenState extends State<UserMainScreen> {
                           actions: [
                             TextButton(
                               onPressed: () {
-
                                 //_deleteAccount();
 
-                                FirebaseFirestore.instance.collection('Users').doc(_auth.currentUser!.email).delete();
+                                FirebaseFirestore.instance
+                                    .collection('Users')
+                                    .doc(_auth.currentUser!.email)
+                                    .delete();
 
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('Your account and all its data have deleted!'),
+                                    content: Text(
+                                        'Your account and all its data have deleted!'),
                                   ),
                                 );
 
@@ -203,8 +192,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
                             ),
                           ],
                         );
-                      }
-                  );
+                      });
                 },
               ),
               ListTile(
@@ -213,8 +201,10 @@ class _UserMainScreenState extends State<UserMainScreen> {
                 onTap: () {
                   _auth.signOut();
 
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const LogInScreen()));
-
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LogInScreen()));
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -231,36 +221,45 @@ class _UserMainScreenState extends State<UserMainScreen> {
             ],
           ),
         ),
-        body:SingleChildScrollView(
+        body: SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-          
-                const SizedBox(height: 10,),
-          
+                const SizedBox(
+                  height: 10,
+                ),
                 Row(
                   children: [
                     Padding(
                       padding: EdgeInsets.only(left: 20.0),
-                      child: Text('Welcome, $_userName',style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 28),),
+                      child: Text(
+                        'Welcome, $_userName',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 28),
+                      ),
                     ),
-          
-
                   ],
                 ),
-          
-                const SizedBox(height: 40,),
-          
+                const SizedBox(
+                  height: 40,
+                ),
                 const Padding(
                   padding: EdgeInsets.only(left: 20.0),
-                  child: Text('Nearby Users',style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontSize: 15),),
+                  child: Text(
+                    'Nearby Users',
+                    style: TextStyle(
+                        color: Colors.black54,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                  ),
                 ),
-          
-                const SizedBox(height: 5,),
-          
-          
+                const SizedBox(
+                  height: 5,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: Container(
@@ -270,43 +269,42 @@ class _UserMainScreenState extends State<UserMainScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.brown,
                     ),
-                    child:  GoogleMap(
+                    child: GoogleMap(
                       zoomControlsEnabled: false,
-                      onMapCreated: ((GoogleMapController controller) => _mapController.complete(controller)),
-                        initialCameraPosition: CameraPosition(
-                          target: _initialCameraPosition,
-                          zoom: 10,
-                        ),
-          
+                      onMapCreated: ((GoogleMapController controller) =>
+                          _mapController.complete(controller)),
+                      initialCameraPosition: CameraPosition(
+                        target: _initialCameraPosition,
+                        zoom: 10,
+                      ),
                       markers: {
-          
                         Marker(
-                          markerId: const MarkerId('_userCurrentPosition',),
+                          markerId: const MarkerId(
+                            '_userCurrentPosition',
+                          ),
                           icon: BitmapDescriptor.defaultMarker,
                           position: _initialCameraPosition,
-                          infoWindow: const InfoWindow(title: 'User Current Location'),
+                          infoWindow:
+                              const InfoWindow(title: 'User Current Location'),
                         ),
-          
-          
                       },
-          
                     ),
-          
                   ),
                 ),
-          
-                const SizedBox(height: 15,),
-          
-          
-                 Padding(
+                const SizedBox(
+                  height: 15,
+                ),
+                Padding(
                   padding: EdgeInsets.only(left: 20.0),
                   child: Row(
                     children: [
-          
-                      Text('Fall Detection Sensor',style: TextStyle(fontWeight: FontWeight.bold),),
-          
-                      const SizedBox(width: 180,),
-          
+                      Text(
+                        'Fall Detection Sensor',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        width: 180,
+                      ),
                       Switch(
                         value: _detectionEnabled,
                         onChanged: (value) {
@@ -316,22 +314,20 @@ class _UserMainScreenState extends State<UserMainScreen> {
                         },
                         activeColor: Colors.blue,
                       ),
-          
-          
-          
                     ],
                   ),
                 ),
-          
                 Padding(
                   padding: EdgeInsets.only(left: 20.0),
                   child: Row(
                     children: [
-          
-                      const Text('Live Location',style: TextStyle(fontWeight: FontWeight.bold),),
-          
-                      const SizedBox(width: 222,),
-          
+                      const Text(
+                        'Live Location',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        width: 222,
+                      ),
                       Switch(
                         value: _locationEnabled,
                         onChanged: (value) {
@@ -341,15 +337,12 @@ class _UserMainScreenState extends State<UserMainScreen> {
                         },
                         activeColor: Colors.blue,
                       ),
-          
-          
-          
                     ],
                   ),
                 ),
-          
-                const SizedBox(height: 5,),
-          
+                const SizedBox(
+                  height: 5,
+                ),
                 Center(
                   child: InkWell(
                     child: Container(
@@ -359,36 +352,22 @@ class _UserMainScreenState extends State<UserMainScreen> {
                         color: Colors.blue,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child:  const Center(child:  Text('Share Location Now',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),),),
+                      child: const Center(
+                        child: Text(
+                          'Share Location Now',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                        ),
+                      ),
                     ),
-          
                   ),
                 ),
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
               ],
             ),
           ),
         ),
-      
       ),
     );
   }
@@ -405,8 +384,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
       );
       openAppSettings();
       return;
-    }
-    else if (permission == LocationPermission.deniedForever) {
+    } else if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Location permission denied'),
@@ -423,34 +401,26 @@ class _UserMainScreenState extends State<UserMainScreen> {
       _cameraToPosition(_initialCameraPosition);
     });
 
-
-    LocationController().getLocationController().onLocationChanged
+    LocationController()
+        .getLocationController()
+        .onLocationChanged
         .listen((LocationData currentLocation) {
-
-      if (currentLocation.latitude != null && currentLocation.longitude != null) {
-
-        if(_locationEnabled==true){
+      if (currentLocation.latitude != null &&
+          currentLocation.longitude != null) {
+        if (_locationEnabled == true) {
           setState(() {
-            _initialCameraPosition = LatLng(currentLocation.latitude!, currentLocation.longitude!);
+            _initialCameraPosition =
+                LatLng(currentLocation.latitude!, currentLocation.longitude!);
             _cameraToPosition(_initialCameraPosition!);
 
             fireStore.doc(_auth.currentUser?.email).update({
-              'latitude':_initialCameraPosition.latitude.toString(),
+              'latitude': _initialCameraPosition.latitude.toString(),
               'longitude': _initialCameraPosition.longitude.toString(),
             });
-
-          }
-          );
+          });
         }
-
       }
-
     });
-
-
-
-
-
   }
   ////////////////////////////////////////////
 
@@ -464,9 +434,6 @@ class _UserMainScreenState extends State<UserMainScreen> {
       CameraUpdate.newCameraPosition(_newCameraPosition),
     );
   }
-
-
-
 
 ////////////////////////////////////////////////////////
 }
