@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ import 'package:swaysafeguardapp/Screens/utilils.dart';
 import 'admin_main_screen.dart';
 import 'change_password_screen.dart';
 import 'my_profile_details_screen.dart';
+import 'package:sensors_plus/sensors_plus.dart';
+import 'package:status_alert/status_alert.dart';
 
 class UserMainScreen extends StatefulWidget {
   const UserMainScreen({super.key});
@@ -55,7 +58,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
   //GoogleAuthProvider _googleAuthProvider= GoogleAuthProvider();
 
   User? _user;
-
+////////////////////////////////////////////////////////////////
   @override
   void initState() {
     super.initState();
@@ -69,9 +72,13 @@ class _UserMainScreenState extends State<UserMainScreen> {
     });
 
     _getUserLocation();
+
+
+    detectDeviceFall();
+
   }
 
-  ////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
 
   final fireStore = FirebaseFirestore.instance.collection('Users');
 
@@ -98,7 +105,47 @@ class _UserMainScreenState extends State<UserMainScreen> {
     }
   }
 
-  //////////////////////
+  ///////////////////////////////////////////////////////////////////
+
+
+
+  void detectDeviceFall() {
+
+
+      accelerometerEvents.listen((AccelerometerEvent event) {
+        double accelerationSquareRoot = sqrt(
+          pow(event.x, 2) + pow(event.y, 2) + pow(event.z, 2),
+        );
+        if (accelerationSquareRoot >= 100) {
+
+          if(_detectionEnabled==true){
+            StatusAlert.show(
+              context,
+              duration: Duration(seconds: 2),
+              title: 'Fall Detection',
+              subtitle: 'Device fall has been detected!',
+              configuration: IconConfiguration(icon: Icons.dangerous_rounded),
+              maxWidth: 260,
+              backgroundColor: Colors.red,
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+            );
+          }
+
+        }
+
+      });
+
+
+
+  }
+
+
+
+
+
+
+
+  //////////////////////////////////////////////////////////////////
 
   bool _detectionEnabled = true;
   bool _locationEnabled = true;
@@ -166,7 +213,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                //_deleteAccount();
+                                _deleteAccount();
 
                                 FirebaseFirestore.instance
                                     .collection('Users')
@@ -236,7 +283,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
                       padding: EdgeInsets.only(left: 20.0),
                       child: Text(
                         'Welcome, $_userName',
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.normal,
                             fontSize: 28),
@@ -298,13 +345,14 @@ class _UserMainScreenState extends State<UserMainScreen> {
                   padding: EdgeInsets.only(left: 20.0),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         'Fall Detection Sensor',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
                         width: 180,
                       ),
+
                       Switch(
                         value: _detectionEnabled,
                         onChanged: (value) {
@@ -314,6 +362,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
                         },
                         activeColor: Colors.blue,
                       ),
+
                     ],
                   ),
                 ),
@@ -402,11 +451,8 @@ class _UserMainScreenState extends State<UserMainScreen> {
     });
 
     LocationController()
-        .getLocationController()
-        .onLocationChanged
-        .listen((LocationData currentLocation) {
-      if (currentLocation.latitude != null &&
-          currentLocation.longitude != null) {
+        .getLocationController().onLocationChanged.listen((LocationData currentLocation) {
+      if (currentLocation.latitude != null && currentLocation.longitude != null) {
         if (_locationEnabled == true) {
           setState(() {
             _initialCameraPosition =
@@ -420,6 +466,18 @@ class _UserMainScreenState extends State<UserMainScreen> {
           });
         }
       }
+
+      if(_detectionEnabled==true){
+        detectDeviceFall();
+      }
+
+
+
+
+
+
+
+
     });
   }
   ////////////////////////////////////////////

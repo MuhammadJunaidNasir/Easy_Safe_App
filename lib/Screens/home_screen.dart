@@ -1,9 +1,6 @@
-import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swaysafeguardapp/Screens/signup_screen.dart';
-import 'package:swaysafeguardapp/Screens/user_main_screen.dart';
 
 import 'login_screen.dart';
 

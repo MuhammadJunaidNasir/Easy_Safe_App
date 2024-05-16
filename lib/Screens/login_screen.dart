@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:swaysafeguardapp/Cubit/login_cubit.dart';
 import 'package:swaysafeguardapp/Screens/admin_main_screen.dart';
 import 'package:swaysafeguardapp/Screens/signup_screen.dart';
 import 'package:swaysafeguardapp/Screens/user_main_screen.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 import '../firebase_services.dart';
 

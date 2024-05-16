@@ -16,7 +16,6 @@ import 'package:swaysafeguardapp/Screens/my_profile_details_screen.dart';
 import 'package:swaysafeguardapp/Screens/utilils.dart';
 
 import 'consts.dart';
-import 'package:custom_info_window/custom_info_window.dart';
 import 'package:http/http.dart' as http;
 
 class AdminMainScreen extends StatefulWidget {

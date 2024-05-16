@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'login_screen.dart';
 
 class ProfileDetailsScreen extends StatefulWidget {
   const ProfileDetailsScreen({super.key});
@@ -127,7 +126,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
       
                       const Padding(
                         padding: EdgeInsets.only(left: 20.0),
-                        child: Text('Create account',style: TextStyle(color: Colors.deepPurpleAccent, fontWeight: FontWeight.bold, fontSize: 28),),
+                        child: Text('Update Account Info',style: TextStyle(color: Colors.deepPurpleAccent, fontWeight: FontWeight.bold, fontSize: 28),),
                       ),
       
                       const SizedBox(height: 20,),

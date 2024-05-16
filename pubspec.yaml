@@ -50,6 +50,8 @@ dependencies:
   http: ^1.2.1
   flutter_google_maps_webservices: ^1.1.1
   geocoding: ^3.0.0
+  sensors_plus: ^5.0.1
+  status_alert: ^1.0.1
 
 dev_dependencies:
   flutter_test:
