@@ -121,12 +121,12 @@ class _UserMainScreenState extends State<UserMainScreen> {
           if(_detectionEnabled==true){
             StatusAlert.show(
               context,
-              duration: Duration(seconds: 2),
+              duration: Duration(seconds: 5),
               title: 'Fall Detection',
               subtitle: 'Device fall has been detected!',
               configuration: IconConfiguration(icon: Icons.dangerous_rounded),
               maxWidth: 260,
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.grey,
               borderRadius: BorderRadius.all(Radius.circular(15)),
             );
           }
@@ -325,6 +325,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
                         zoom: 10,
                       ),
                       markers: {
+
                         Marker(
                           markerId: const MarkerId(
                             '_userCurrentPosition',
@@ -332,9 +333,10 @@ class _UserMainScreenState extends State<UserMainScreen> {
                           icon: BitmapDescriptor.defaultMarker,
                           position: _initialCameraPosition,
                           infoWindow:
-                              const InfoWindow(title: 'User Current Location'),
+                          const InfoWindow(title: 'User Current Location'),
                         ),
                       },
+                      mapType: MapType.normal,
                     ),
                   ),
                 ),
